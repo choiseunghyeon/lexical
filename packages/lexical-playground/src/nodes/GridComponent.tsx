@@ -170,9 +170,7 @@ export default function GridComponent({
           transform: 'translateZ(0)',
           willChange: 'transform',
         }}>
-        <table style={{width: '100%'}}>
-          <tbody>{visibleRows}</tbody>
-        </table>
+        <div style={{display: 'grid', width: '100%'}}>{visibleRows}</div>
       </div>
     </div>
   );
@@ -189,11 +187,17 @@ interface GridRowProps {
 
 const Row = React.memo(function Row({rowData, style}: GridRowProps) {
   return (
-    <tr key={rowData.id} style={style}>
+    <div
+      key={rowData.id}
+      style={{
+        ...style,
+        display: 'flex',
+        width: '100%',
+      }}>
       {rowData.cells.map((cellData) => (
         <Cell key={cellData.id} cellData={cellData} />
       ))}
-    </tr>
+    </div>
   );
 });
 
@@ -207,18 +211,19 @@ interface GridCellProps {
 
 function Cell({cellData}: GridCellProps) {
   return (
-    <td
+    <div
       key={cellData.id}
       style={{
+        alignItems: 'center',
         border: '1px solid #aaa',
+        display: 'flex',
+        flex: 1,
         fontSize: '16px',
         height: 60,
-        padding: 8,
+        justifyContent: 'center',
         textAlign: 'center',
-        verticalAlign: 'middle',
-        width: '100%',
       }}>
       {cellData.value}
-    </td>
+    </div>
   );
 }
