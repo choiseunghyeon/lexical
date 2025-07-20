@@ -321,7 +321,7 @@ function useVirtualScroll(
         setVisibleRange(newVisibleRange);
       }
     },
-    100, // 100ms 쓰로틀링
+    50, // 50ms 쓰로틀링
   );
 
   // 스크롤 이벤트 핸들러
@@ -370,7 +370,7 @@ export default function GridComponent({
   // 가상 스크롤 설정 (상수로 정의하여 불필요한 재생성 방지)
   const containerHeight = 400;
   const rowHeight = 60;
-  const overscan = 5;
+  const overscan = 10;
   const pageSize = 20;
 
   const {visibleRange, handleScroll, totalHeight} = useVirtualScroll(
