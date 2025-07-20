@@ -53,6 +53,7 @@ import ExcalidrawPlugin from './plugins/ExcalidrawPlugin';
 import FigmaPlugin from './plugins/FigmaPlugin';
 import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
 import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
+import GridPlugin from './plugins/GridPlugin';
 import ImagesPlugin from './plugins/ImagesPlugin';
 import InlineImagePlugin from './plugins/InlineImagePlugin';
 import KeywordsPlugin from './plugins/KeywordsPlugin';
@@ -217,6 +218,7 @@ export default function Editor(): JSX.Element {
             />
             <TableCellResizer />
             <ImagesPlugin />
+            <GridPlugin />
             <InlineImagePlugin />
             <LinkPlugin hasLinkAttributes={hasLinkAttributes} />
             <PollPlugin />

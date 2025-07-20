@@ -78,6 +78,7 @@ import {EmbedConfigs} from '../AutoEmbedPlugin';
 import {INSERT_COLLAPSIBLE_COMMAND} from '../CollapsiblePlugin';
 import {InsertEquationDialog} from '../EquationsPlugin';
 import {INSERT_EXCALIDRAW_COMMAND} from '../ExcalidrawPlugin';
+import {InsertGridDialog} from '../GridPlugin';
 import {
   INSERT_IMAGE_COMMAND,
   InsertImageDialog,
@@ -1257,6 +1258,19 @@ export default function ToolbarPlugin({
                   className="item">
                   <i className="icon image" />
                   <span className="text">Image</span>
+                </DropDownItem>
+                <DropDownItem
+                  onClick={() => {
+                    showModal('Insert Grid', (onClose) => (
+                      <InsertGridDialog
+                        activeEditor={activeEditor}
+                        onClose={onClose}
+                      />
+                    ));
+                  }}
+                  className="item">
+                  <i className="icon image" />
+                  <span className="text">그리드</span>
                 </DropDownItem>
                 <DropDownItem
                   onClick={() => {
