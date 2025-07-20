@@ -243,6 +243,41 @@ function useGridDataFetching(
 }
 
 // ============================================================================
+// 쓰로틀링 유틸리티
+// ============================================================================
+
+function useThrottle<T extends (...args: unknown[]) => unknown>(
+  callback: T,
+  delay: number,
+): T {
+  const lastRun = useRef<number>(0);
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
+  return useCallback(
+    ((...args: unknown[]) => {
+      const now = Date.now();
+
+      if (now - lastRun.current >= delay) {
+        callback(...args);
+        lastRun.current = now;
+      } else {
+        // 이전 타임아웃이 있다면 취소
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        // 남은 시간만큼 대기 후 실행
+        timeoutRef.current = setTimeout(() => {
+          callback(...args);
+          lastRun.current = Date.now();
+        }, delay - (now - lastRun.current));
+      }
+    }) as T,
+    [callback, delay],
+  );
+}
+
+// ============================================================================
 // 가상 스크롤 훅
 // ============================================================================
 
@@ -277,16 +312,25 @@ function useVirtualScroll(
     [containerHeight, rowHeight, overscan, lastIndex],
   );
 
+  // 쓰로틀링된 스크롤 핸들러 (100ms 간격)
+  const throttledScrollHandler = useThrottle(
+    (newScrollTop: unknown) => {
+      if (typeof newScrollTop === 'number') {
+        setScrollTop(newScrollTop);
+        const newVisibleRange = calculateVisibleRange(newScrollTop);
+        setVisibleRange(newVisibleRange);
+      }
+    },
+    100, // 100ms 쓰로틀링
+  );
+
   // 스크롤 이벤트 핸들러
   const handleScroll = useCallback(
     (event: React.UIEvent<HTMLDivElement>) => {
       const newScrollTop = event.currentTarget.scrollTop;
-      setScrollTop(newScrollTop);
-
-      const newVisibleRange = calculateVisibleRange(newScrollTop);
-      setVisibleRange(newVisibleRange);
+      throttledScrollHandler(newScrollTop);
     },
-    [calculateVisibleRange],
+    [throttledScrollHandler],
   );
 
   // 초기 visible range 설정
